@@ -3,8 +3,14 @@ import { TROCEOS } from "../assets/data";
 import { GiCow } from "react-icons/gi";
 import { FaWhatsapp } from "react-icons/fa";
 import { ArrowUpRight } from "lucide-react";
+import { useAppContext } from "../context/useAppContext";
 
-const TroceosSection = ({ onSelectCut }) => {
+// Acepta onSelectCut como prop opcional.
+// Si no se pasa, lo lee del context (igual que CortesSection).
+const TroceosSection = ({ onSelectCut: onSelectCutProp }) => {
+  const { setSelectedCut } = useAppContext();
+  const onSelectCut = onSelectCutProp ?? setSelectedCut;
+
   return (
     <section className="w-full py-10 px-4 bg-white">
       <div className="max-w-2xl mx-auto">

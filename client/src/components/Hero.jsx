@@ -2,7 +2,7 @@ import { ArrowUpRight, ChevronRight } from "lucide-react";
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa6";
 import { PiCowFill, PiHandshakeFill, PiTruckFill } from "react-icons/pi";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../context/useAppContext";
 
 const Hero = () => {
   const { setContactOpen } = useAppContext();

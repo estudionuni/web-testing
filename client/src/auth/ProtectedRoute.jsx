@@ -1,11 +1,21 @@
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import { useAuth } from "./useAuth";
+
+// Uso 1 — como wrapper de layout:
+//   <Route element={<ProtectedRoute roles={["admin"]}><AdminLayout /></ProtectedRoute>}>
+//
+// Uso 2 — como layout en sí (sin children):
+//   <Route element={<ProtectedRoute roles={["admin"]} />}>
 
 export default function ProtectedRoute({ children, roles = [] }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <p>Cargando...</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">Cargando...</p>
+      </div>
+    );
   }
 
   if (!user) {
@@ -16,5 +26,7 @@ export default function ProtectedRoute({ children, roles = [] }) {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  // Si se pasó un children (ej: <AdminLayout />), lo renderiza;
+  // si no, actúa como layout propio y usa <Outlet />.
+  return children ?? <Outlet />;
 }

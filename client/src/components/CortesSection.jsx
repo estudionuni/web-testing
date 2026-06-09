@@ -4,7 +4,7 @@ import { FaChevronRight, FaTimes, FaWhatsapp } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { LuBeef } from "react-icons/lu";
 import useScrollLock from "../hooks/useScrollLock";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../context/useAppContext";
 
 // Genera dinámicamente las secciones cruzadas por tag.
 // Para agregar un item a "embutidos" o "preparados", solo

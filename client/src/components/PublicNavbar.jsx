@@ -1,7 +1,40 @@
 import React from "react";
+import { Link, useNavigate } from "react-router";
 import AnnouncementBar from "./AnnouncementBar";
 import { FaBars, FaChevronRight, FaTimes, FaWhatsapp } from "react-icons/fa";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../context/useAppContext";
+
+// Navega a una ruta; si el href tiene ancla (#), hace scroll suave después.
+function NavLink({ href, children, onClick }) {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    onClick?.();
+
+    const [path, hash] = href.split("#");
+    const targetPath = path || "/";
+
+    navigate(targetPath);
+
+    if (hash) {
+      // Pequeño delay para que React Router termine de montar la página
+      setTimeout(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
+      }, 80);
+    }
+  };
+
+  return (
+    <a
+      href={href}
+      onClick={handleClick}
+      className="text-sm font-semibold text-main hover:text-main-red px-3 py-2 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap cursor-pointer select-none"
+    >
+      {children}
+    </a>
+  );
+}
 
 const PublicNavbar = () => {
   const { menuOpen, navLinks, setContactOpen, setMenuOpen } = useAppContext();
@@ -13,27 +46,24 @@ const PublicNavbar = () => {
         <div className="w-full bg-white/90 backdrop-blur-md">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
             {/* Logo */}
-            <img
-              src="/logoRound.svg"
-              onContextMenu={(e) => e.preventDefault()}
-              className="h-18 w-fit cursor-pointer shrink-0 select-none"
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                window.history.replaceState(null, "", "/");
-              }}
-              alt="Abastecedora Valette"
-            />
+            <Link
+              to="/"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
+              <img
+                src="/logoRound.svg"
+                onContextMenu={(e) => e.preventDefault()}
+                className="h-18 w-fit cursor-pointer shrink-0 select-none"
+                alt="Abastecedora Valette"
+              />
+            </Link>
 
             {/* Desktop nav links */}
             <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-semibold text-main hover:text-main-red px-3 py-2 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap cursor-pointer select-none"
-                >
+                <NavLink key={link.href} href={link.href}>
                   {link.label}
-                </a>
+                </NavLink>
               ))}
             </div>
 
@@ -65,15 +95,16 @@ const PublicNavbar = () => {
               style={{ animation: "slideUp .18s cubic-bezier(.22,1,.36,1)" }}
             >
               {navLinks.map((link) => (
-                <a
+                <NavLink
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-between inset-x-4 px-4 py-3 rounded text-sm font-semibold text-main hover:bg-gray-50 hover:text-main-red transition-colors"
                 >
-                  {link.label}
-                  <FaChevronRight size={10} className="text-gray-300" />
-                </a>
+                  <span className="flex items-center justify-between w-full">
+                    {link.label}
+                    <FaChevronRight size={10} className="text-gray-300" />
+                  </span>
+                </NavLink>
               ))}
             </div>
           )}
